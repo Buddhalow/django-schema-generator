@@ -52,7 +52,7 @@ RAW_ID_THRESHOLD = 100
 NO_QUERY_DB = False
 
 PRINT_IMPORTS = '''# vim: set fileencoding=utf-8 :
-from django.contrib import admin
+import graphene
 
 from . import models
 '''
@@ -61,6 +61,33 @@ PRINT_ADMIN_CLASS = '''
 
 class %(name)sAdmin(admin.ModelAdmin):
 %(class_)s
+'''
+
+PRINT_OBJECT_TYPE_CLASS = '''
+class %(name)ObjectType(DjangoObjectType):
+    class Meta:
+        model = %(class_)s
+'''
+
+PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''
+    def resolve_%(class_)s(self, info):
+        return %(class_).objects.all()
+
+    def resolve_%(class_)(self, info, id):
+        return %(class_).objects.get(
+            id=id
+        )
+'''
+
+PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
+    %(class_)s = graphene.List(
+        %(class_)ObjectType
+    )
+
+    %(class_) = graphene.Field(
+        %(class_)ObjectType,
+        id=graphene.String()
+    )
 '''
 
 PRINT_ADMIN_REGISTRATION_METHOD = '''
@@ -82,7 +109,7 @@ PRINT_ADMIN_PROPERTY = '''
     %(key)s = %(value)s'''
 
 
-class AdminApp(object):
+class SchemaApp(object):
     def __init__(self, app, model_res, **options):
         self.app = app
         self.model_res = model_res
@@ -395,5 +422,3 @@ class Command(base_command.CustomBaseCommand):
 
     def handle_app(self, app, model_res, **options):
         print(AdminApp(app, model_res, **options))
-
-
