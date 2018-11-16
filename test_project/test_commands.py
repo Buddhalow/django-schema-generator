@@ -1,7 +1,7 @@
 import six
 import pytest
 
-from django_admin_generator.management.commands import admin_generator
+from django_schema_generator.management.commands import schema_generator
 
 DEFAULTS = {
     'date_hierarchy_names': 'date_joined',
@@ -21,7 +21,7 @@ DEFAULTS_FILTERED['raw_id_threshold'] = 250
 
 @pytest.fixture
 def command(monkeypatch):
-    return admin_generator.Command()
+    return schema_generator.Command()
 
 
 def test_no_app(command):
@@ -30,7 +30,7 @@ def test_no_app(command):
 
 
 def test_parser(command):
-    command.create_parser('manage.py', 'admin_generator')
+    command.create_parser('manage.py', 'schema_generator')
 
 
 def check_output(capsys):
@@ -38,12 +38,12 @@ def check_output(capsys):
     # Strip out encodings (and all other comments) so `compile` doesn't break
     out = six.u('\n').join(line for line in out.split('\n')
                            if not line.startswith('#'))
-    compile(out, 'admin.py', 'exec')
+    compile(out, 'schema.py', 'exec')
 
 
 @pytest.mark.django_db
 def test_app(command, capsys, monkeypatch):
-    command = admin_generator.Command()
+    command =  schema_generator.Command()
     command.handle(app='test_project.test_app', **DEFAULTS)
     check_output(capsys)
 

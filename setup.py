@@ -4,7 +4,7 @@ import setuptools
 # To prevent importing about and thereby breaking the coverage info we use this
 # exec hack
 about = {}
-with open('django_admin_generator/__about__.py') as fp:
+with open('django_schema_generator/__about__.py') as fp:
     exec(fp.read(), about)
 
 

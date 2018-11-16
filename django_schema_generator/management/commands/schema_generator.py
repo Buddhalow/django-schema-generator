@@ -53,15 +53,11 @@ NO_QUERY_DB = False
 
 PRINT_IMPORTS = '''# vim: set fileencoding=utf-8 :
 import graphene
+from graphene_django import DjangoObjectType
 
 from . import models
 '''
 
-PRINT_ADMIN_CLASS = '''
-
-class %(name)sAdmin(admin.ModelAdmin):
-%(class_)s
-'''
 
 PRINT_OBJECT_TYPE_CLASS = '''
 class %(name)ObjectType(DjangoObjectType):
@@ -70,40 +66,30 @@ class %(name)ObjectType(DjangoObjectType):
 '''
 
 PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''
-    def resolve_%(class_)s(self, info):
-        return %(class_).objects.all()
+    def resolve_%(class_)ss(self, info):
+        return %(class_)s.objects.all()
 
-    def resolve_%(class_)(self, info, id):
-        return %(class_).objects.get(
+    def resolve_%(class_)s(self, info, id):
+        return %(class_)s.objects.get(
             id=id
         )
 '''
 
 PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
-    %(class_)s = graphene.List(
-        %(class_)ObjectType
+    %(class_)ss = graphene.List(
+        %(class_)sObjectType
     )
 
-    %(class_) = graphene.Field(
-        %(class_)ObjectType,
+    %(class_)s = graphene.Field(
+        %(class_)sObjectType,
         id=graphene.String()
     )
 '''
 
-PRINT_ADMIN_REGISTRATION_METHOD = '''
 
-def _register(model, admin_class):
-    admin.site.register(model, admin_class)
-
+PRINT_QUERY = '''
+class %(app)sQuery(graphene.ObjectType):
 '''
-
-PRINT_ADMIN_REGISTRATION = '''
-_register(models.%(name)s, %(name)sAdmin)'''
-
-PRINT_ADMIN_REGISTRATION_LONG = '''
-_register(
-    models.%(name)s,
-    %(name)sAdmin)'''
 
 PRINT_ADMIN_PROPERTY = '''
     %(key)s = %(value)s'''
@@ -140,21 +126,21 @@ class SchemaApp(object):
     def _unicode_generator(self):
         yield PRINT_IMPORTS
 
-        admin_model_names = []
+        graph_model_names = []
         for admin_model in self:
-            yield PRINT_ADMIN_CLASS % dict(
+            yield PRINT_OBJECT_TYPE_CLASS % dict(
                 name=admin_model.name,
                 class_=admin_model,
             )
-            admin_model_names.append(admin_model.name)
+            graph_model_names.append(admin_model.name)
 
-        yield PRINT_ADMIN_REGISTRATION_METHOD
+        yield PRINT_QUERY % dict(app=self.app)
 
-        for name in admin_model_names:
-            row = PRINT_ADMIN_REGISTRATION % dict(name=name)
-            if len(row) > MAX_LINE_WIDTH:
-                row = PRINT_ADMIN_REGISTRATION_LONG % dict(name=name)
-            yield row
+        for admin_model in self:
+            yield PRINT_OBJECT_TYPE_QUERY_FIELDS % dict(app=self.app, model=admin_model.name, class_=admin_model)
+            yield PRINT_OBJECT_TYPE_QUERY_FUNCTIONS % dict(app=self.app, model=admin_model.name, class_=admin_model)
+
+        yield PRINT_OBJECT_TYPE_QUERY_FIELDS
 
     def __repr__(self):
         return '<%s[%s]>' % (
