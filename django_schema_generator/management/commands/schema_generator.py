@@ -66,7 +66,7 @@ class {klass}ObjectType(DjangoObjectType):
 '''
 
 PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''
-    def resolve_{name}(self, info):
+    def resolve_{name}s(self, info):
         return {klass}.objects.all()
 
     def resolve_{name}(self, info, id):
@@ -147,7 +147,11 @@ class SchemaApp(object):
                 klass=schema_model.name
             )
 
-        yield PRINT_OBJECT_TYPE_QUERY_FIELDS
+        yield PRINT_OBJECT_TYPE_QUERY_FIELDS.format(
+                app=self.app,
+                name=schema_model.name.lower(),
+                klass=schema_model.name
+            )
 
     def __repr__(self):
         return '<%s[%s]>' % (
