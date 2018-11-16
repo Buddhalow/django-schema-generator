@@ -76,11 +76,11 @@ PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''
 '''
 
 PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
-    {model}ss = graphene.List(
+    {klass}ss = graphene.List(
         {klass}ObjectType
     )
 
-    {model} = graphene.Field(
+    {klass} = graphene.Field(
         {klass}ObjectType,
         id=graphene.String()
     )
