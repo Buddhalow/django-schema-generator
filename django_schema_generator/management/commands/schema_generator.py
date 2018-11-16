@@ -143,7 +143,7 @@ class SchemaApp(object):
             self
         ]
         yield PRINT_IMPORTS.format(
-            ','.join(str_models)
+            models=', '.join(str_models)
         )
 
         graph_model_names = []
