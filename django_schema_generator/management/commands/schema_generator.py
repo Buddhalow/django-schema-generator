@@ -60,39 +60,39 @@ from . import models
 
 
 PRINT_OBJECT_TYPE_CLASS = '''
-class %(name)ObjectType(DjangoObjectType):
+class {class_}ObjectType(DjangoObjectType):
     class Meta:
-        model = %(class_)s
+        model = {class_}
 '''
 
 PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''
-    def resolve_%(class_)ss(self, info):
-        return %(class_)s.objects.all()
+    def resolve_{class_}s(self, info):
+        return (class_}.objects.all()
 
-    def resolve_%(class_)s(self, info, id):
-        return %(class_)s.objects.get(
+    def resolve_{class_}(self, info, id):
+        return {class_}.objects.get(
             id=id
         )
 '''
 
 PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
-    %(class_)ss = graphene.List(
-        %(class_)ssObjectType
+    {class_}s = graphene.List(
+        {class_}ObjectType
     )
 
-    %(class_)s = graphene.Field(
-        %(class_)sObjectType,
+    {class_} = graphene.Field(
+        {class_}ObjectType,
         id=graphene.String()
     )
 '''
 
 
 PRINT_QUERY = '''
-class %(app)sQuery(graphene.ObjectType):
+class {app}Query(graphene.ObjectType):
 '''
 
 PRINT_ADMIN_PROPERTY = '''
-    %(key)s = %(value)s'''
+    {key} = {value}'''
 
 
 class SchemaApp(object):
@@ -132,21 +132,20 @@ class SchemaApp(object):
                 name=schema_model.name,
                 class_=schema_model,
             )
-            graph_model_names.append(schema_model.name)
 
         yield PRINT_QUERY % dict(app=self.app)
 
         for schema_model in self:
-            yield PRINT_OBJECT_TYPE_QUERY_FIELDS % dict(
-                app=self.app,
-                model=schema_model.name,
-                lass_=schema_model
-            )
-            yield PRINT_OBJECT_TYPE_QUERY_FUNCTIONS % dict(
+            yield PRINT_OBJECT_TYPE_QUERY_FIELDS.format(dict(
                 app=self.app,
                 model=schema_model.name,
                 class_=schema_model
-            )
+            ))
+            yield PRINT_OBJECT_TYPE_QUERY_FUNCTIONS.format(dict(
+                app=self.app,
+                model=schema_model.name,
+                class_=schema_model
+            ))
 
         yield PRINT_OBJECT_TYPE_QUERY_FIELDS
 
@@ -207,10 +206,7 @@ class SchemaModel(object):
 
     def _process_fields(self, meta):
         parent_fields = meta.parents.values()
-        for field in meta.fields:
-            name = self._process_field(field, parent_fields)
-            if name:  # pragma: no cover
-                yield name
+        yield ""
 
     @classmethod
     def _get_related_model(cls, field):  # pragma: no cover
