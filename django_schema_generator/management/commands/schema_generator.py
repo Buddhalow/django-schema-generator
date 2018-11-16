@@ -77,7 +77,7 @@ PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''
 
 PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
     %(class_)ss = graphene.List(
-        %(class_)sObjectType
+        %(class_)ssObjectType
     )
 
     %(class_)s = graphene.Field(
@@ -137,8 +137,16 @@ class SchemaApp(object):
         yield PRINT_QUERY % dict(app=self.app)
 
         for schema_model in self:
-            yield PRINT_OBJECT_TYPE_QUERY_FIELDS % dict(app=self.app, model=schema_model.name, class_=schema_model)
-            yield PRINT_OBJECT_TYPE_QUERY_FUNCTIONS % dict(app=self.app, model=schema_model.name, class_=schema_model)
+            yield PRINT_OBJECT_TYPE_QUERY_FIELDS % dict(
+                app=self.app,
+                model=schema_model.name,
+                lass_=schema_model
+            )
+            yield PRINT_OBJECT_TYPE_QUERY_FUNCTIONS % dict(
+                app=self.app,
+                model=schema_model.name,
+                class_=schema_model
+            )
 
         yield PRINT_OBJECT_TYPE_QUERY_FIELDS
 
