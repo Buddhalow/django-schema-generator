@@ -66,21 +66,21 @@ class {klass}ObjectType(DjangoObjectType):
 '''
 
 PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''
-    def resolve_{klass}(self, info):
+    def resolve_{name}(self, info):
         return {klass}.objects.all()
 
-    def resolve_{klass}(self, info, id):
+    def resolve_{name}(self, info, id):
         return {klass}.objects.get(
             id=id
         )
 '''
 
 PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
-    {klass}s = graphene.List(
+    {name}s = graphene.List(
         {klass}ObjectType
     )
 
-    {klass} = graphene.Field(
+    {name} = graphene.Field(
         {klass}ObjectType,
         id=graphene.String()
     )
@@ -138,12 +138,12 @@ class SchemaApp(object):
         for schema_model in self:
             yield PRINT_OBJECT_TYPE_QUERY_FIELDS.format(
                 app=self.app,
-                model=schema_model.name,
+                name=schema_model.name.lower(),
                 klass=schema_model.name
             )
             yield PRINT_OBJECT_TYPE_QUERY_FUNCTIONS.format(
                 app=self.app,
-                model=schema_model.name,
+                name=schema_model.name.lower(),
                 klass=schema_model.name
             )
 
