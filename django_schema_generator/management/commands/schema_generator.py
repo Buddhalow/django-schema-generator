@@ -104,7 +104,6 @@ PRINT_ADMIN_PROPERTY = '''
 
 
 SCHEMA_END = '''
-
 schema = graphene.Schema(query={app}Query)
 '''
 
