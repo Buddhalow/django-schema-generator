@@ -76,11 +76,11 @@ PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
         {klass}ObjectType,
         id=graphene.String()
     )
-
 '''
 
 
-PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''def resolve_{name}s(self, info):
+PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''
+    def resolve_{name}s(self, info):
         return {klass}.objects.all()
 
     def resolve_{name}(self, info, id):
