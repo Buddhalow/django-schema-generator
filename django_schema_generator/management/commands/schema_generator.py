@@ -60,12 +60,15 @@ from . import models
 
 
 PRINT_OBJECT_TYPE_CLASS = '''
+
 class {klass}ObjectType(DjangoObjectType):
     class Meta:
         model = {klass}
+
 '''
 
 PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''
+
     def resolve_{name}s(self, info):
         return {klass}.objects.all()
 
@@ -73,9 +76,11 @@ PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''
         return {klass}.objects.get(
             id=id
         )
+
 '''
 
 PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
+
     {name}s = graphene.List(
         {klass}ObjectType
     )
@@ -84,15 +89,24 @@ PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
         {klass}ObjectType,
         id=graphene.String()
     )
+
 '''
 
 
 PRINT_QUERY = '''
+
 class {app}Query(graphene.ObjectType):
 '''
 
+
 PRINT_ADMIN_PROPERTY = '''
     {key} = {value}'''
+
+
+SCHEMA_END = '''
+
+schema = graphene.Schema(query={app}Query)
+'''
 
 
 class SchemaApp(object):
@@ -146,6 +160,10 @@ class SchemaApp(object):
                 name=schema_model.name.lower(),
                 klass=schema_model.name
             )
+
+        yield SCHEMA_END.format(
+            app=self.app.name.capitalize()
+        )
 
     def __repr__(self):
         return '<%s[%s]>' % (
