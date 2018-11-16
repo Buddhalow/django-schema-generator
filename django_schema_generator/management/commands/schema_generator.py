@@ -75,7 +75,6 @@ PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''
         return {klass}.objects.get(
             id=id
         )
-
 '''
 
 PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
@@ -87,12 +86,10 @@ PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
         {klass}ObjectType,
         id=graphene.String()
     )
-
 '''
 
 
 PRINT_QUERY = '''
-
 class {app}Query(graphene.ObjectType):
 '''
 
