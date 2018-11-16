@@ -128,24 +128,24 @@ class SchemaApp(object):
 
         graph_model_names = []
         for schema_model in self:
-            yield PRINT_OBJECT_TYPE_CLASS % dict(
+            yield PRINT_OBJECT_TYPE_CLASS.format(
                 name=schema_model.name,
                 class_=schema_model,
             )
 
-        yield PRINT_QUERY % dict(app=self.app)
+        yield PRINT_QUERY.format(app=self.app)
 
         for schema_model in self:
-            yield PRINT_OBJECT_TYPE_QUERY_FIELDS.format(dict(
+            yield PRINT_OBJECT_TYPE_QUERY_FIELDS.format(
                 app=self.app,
                 model=schema_model.name,
                 class_=schema_model
-            ))
-            yield PRINT_OBJECT_TYPE_QUERY_FUNCTIONS.format(dict(
+            )
+            yield PRINT_OBJECT_TYPE_QUERY_FUNCTIONS.format(
                 app=self.app,
                 model=schema_model.name,
                 class_=schema_model
-            ))
+            )
 
         yield PRINT_OBJECT_TYPE_QUERY_FIELDS
 
@@ -272,7 +272,7 @@ class SchemaModel(object):
             raise TypeError('%s is not supported in %r' % (type(value), value))
 
     def _yield_string(self, key, value, converter=repr):
-        return PRINT_ADMIN_PROPERTY % dict(
+        return PRINT_ADMIN_PROPERTY.format(
             key=key,
             value=converter(value),
         )
@@ -401,7 +401,7 @@ class Command(base_command.CustomBaseCommand):
                          'argument')
             self.warning('Available apps:')
             for app in sorted(installed_apps):
-                self.warning('    %s' % app)
+                self.warning('    {}'.format(app))
             sys.exit(1)
 
         model_res = []
