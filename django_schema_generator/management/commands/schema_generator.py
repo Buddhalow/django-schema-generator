@@ -60,28 +60,28 @@ from . import models
 
 
 PRINT_OBJECT_TYPE_CLASS = '''
-class {class_}ObjectType(DjangoObjectType):
+class {klass}ObjectType(DjangoObjectType):
     class Meta:
-        model = {class_}
+        model = {klass}
 '''
 
 PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''
-    def resolve_{class_}s(self, info):
-        return {class_}.objects.all()
+    def resolve_{klass}s(self, info):
+        return {klass}.objects.all()
 
-    def resolve_{class_}(self, info, id):
-        return {class_}.objects.get(
+    def resolve_{klass}(self, info, id):
+        return {klass}.objects.get(
             id=id
         )
 '''
 
 PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
-    {class_}s = graphene.List(
-        {class_}ObjectType
+    {klass}s = graphene.List(
+        {klass}ObjectType
     )
 
-    {class_} = graphene.Field(
-        {class_}ObjectType,
+    {klass} = graphene.Field(
+        {klass}ObjectType,
         id=graphene.String()
     )
 '''
@@ -130,7 +130,7 @@ class SchemaApp(object):
         for schema_model in self:
             yield PRINT_OBJECT_TYPE_CLASS.format(
                 name=schema_model.name,
-                class_=schema_model,
+                klass=schema_model.name,
             )
 
         yield PRINT_QUERY.format(app=self.app)
@@ -139,12 +139,12 @@ class SchemaApp(object):
             yield PRINT_OBJECT_TYPE_QUERY_FIELDS.format(
                 app=self.app,
                 model=schema_model.name,
-                class_=schema_model
+                klass=schema_model
             )
             yield PRINT_OBJECT_TYPE_QUERY_FUNCTIONS.format(
                 app=self.app,
                 model=schema_model.name,
-                class_=schema_model
+                klass=schema_model
             )
 
         yield PRINT_OBJECT_TYPE_QUERY_FIELDS
