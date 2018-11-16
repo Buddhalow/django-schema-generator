@@ -86,12 +86,12 @@ PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
         {klass}ObjectType,
         id=graphene.String()
     )
+
 '''
 
 
 PRINT_QUERY = '''
-class {app}Query(graphene.ObjectType):
-'''
+class {app}Query(graphene.ObjectType):'''
 
 
 PRINT_ADMIN_PROPERTY = '''
