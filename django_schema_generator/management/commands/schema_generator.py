@@ -55,7 +55,7 @@ PRINT_IMPORTS = '''# vim: set fileencoding=utf-8 :
 import graphene
 from graphene_django import DjangoObjectType
 
-from . import models
+from .models import {classes}
 '''
 
 
@@ -68,7 +68,6 @@ class {klass}ObjectType(DjangoObjectType):
 '''
 
 PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''
-
     def resolve_{name}s(self, info):
         return {klass}.objects.all()
 
@@ -80,7 +79,6 @@ PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''
 '''
 
 PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
-
     {name}s = graphene.List(
         {klass}ObjectType
     )
@@ -137,7 +135,16 @@ class SchemaApp(object):
             return self.__unicode__()
 
     def _unicode_generator(self):
-        yield PRINT_IMPORTS
+        str_models = [
+            model.name
+            for
+            model
+            in
+            self
+        ]
+        yield PRINT_IMPORTS.format(
+            ','.join(str_models)
+        )
 
         graph_model_names = []
         for schema_model in self:
