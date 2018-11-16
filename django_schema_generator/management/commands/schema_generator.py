@@ -55,7 +55,7 @@ PRINT_IMPORTS = '''# vim: set fileencoding=utf-8 :
 import graphene
 from graphene_django import DjangoObjectType
 
-from .models import {classes}
+from .models import {models}
 '''
 
 
