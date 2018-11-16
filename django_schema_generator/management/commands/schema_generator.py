@@ -103,16 +103,16 @@ class SchemaApp(object):
 
     def __iter__(self):
         for model in get_models(self.app):
-            admin_model = AdminModel(model, **self.options)
+            schema_model = SchemaModel(model, **self.options)
 
             for model_re in self.model_res:
-                if model_re.search(admin_model.name):
+                if model_re.search(schema_model.name):
                     break
             else:
                 if self.model_res:
                     continue
 
-            yield admin_model
+            yield schema_model
 
     def __unicode__(self):
         return six.u('').join(self._unicode_generator())
@@ -127,18 +127,18 @@ class SchemaApp(object):
         yield PRINT_IMPORTS
 
         graph_model_names = []
-        for admin_model in self:
+        for schema_model in self:
             yield PRINT_OBJECT_TYPE_CLASS % dict(
-                name=admin_model.name,
-                class_=admin_model,
+                name=schema_model.name,
+                class_=schema_model,
             )
-            graph_model_names.append(admin_model.name)
+            graph_model_names.append(schema_model.name)
 
         yield PRINT_QUERY % dict(app=self.app)
 
-        for admin_model in self:
-            yield PRINT_OBJECT_TYPE_QUERY_FIELDS % dict(app=self.app, model=admin_model.name, class_=admin_model)
-            yield PRINT_OBJECT_TYPE_QUERY_FUNCTIONS % dict(app=self.app, model=admin_model.name, class_=admin_model)
+        for schema_model in self:
+            yield PRINT_OBJECT_TYPE_QUERY_FIELDS % dict(app=self.app, model=schema_model.name, class_=schema_model)
+            yield PRINT_OBJECT_TYPE_QUERY_FUNCTIONS % dict(app=self.app, model=schema_model.name, class_=schema_model)
 
         yield PRINT_OBJECT_TYPE_QUERY_FIELDS
 
@@ -149,7 +149,7 @@ class SchemaApp(object):
         )
 
 
-class AdminModel(object):
+class SchemaModel(object):
     PRINTABLE_PROPERTIES = (
         'list_display',
         'list_filter',
@@ -335,7 +335,7 @@ class AdminModel(object):
 
 
 class Command(base_command.CustomBaseCommand):
-    help = '''Generate a `admin.py` file for the given app (models)'''
+    help = '''Generate a `schema.py` file for the given app (models)'''
     can_import_settings = True
     requires_system_checks = True
 
@@ -374,7 +374,7 @@ class Command(base_command.CustomBaseCommand):
             'relationships are added to `list_filter`')
         parser.add_argument(
             'app',
-            help='App to generate admin definitions for')
+            help='App to generate schema definitions for')
         parser.add_argument(
             'models', nargs='*',
             help='Regular expressions to filter the models by')
@@ -407,4 +407,4 @@ class Command(base_command.CustomBaseCommand):
         self.handle_app(app, model_res, **kwargs)
 
     def handle_app(self, app, model_res, **options):
-        print(AdminApp(app, model_res, **options))
+        print(SchemaApp(app, model_res, **options))
