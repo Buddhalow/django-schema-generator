@@ -67,7 +67,7 @@ class {class_}ObjectType(DjangoObjectType):
 
 PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''
     def resolve_{class_}s(self, info):
-        return (class_}.objects.all()
+        return {class_}.objects.all()
 
     def resolve_{class_}(self, info, id):
         return {class_}.objects.get(
