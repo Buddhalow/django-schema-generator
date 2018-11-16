@@ -147,12 +147,6 @@ class SchemaApp(object):
                 klass=schema_model.name
             )
 
-        yield PRINT_OBJECT_TYPE_QUERY_FIELDS.format(
-                app=self.app,
-                name=schema_model.name.lower(),
-                klass=schema_model.name
-            )
-
     def __repr__(self):
         return '<%s[%s]>' % (
             self.__class__.__name__,
