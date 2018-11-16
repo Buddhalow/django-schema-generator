@@ -67,16 +67,6 @@ class {klass}ObjectType(DjangoObjectType):
 
 '''
 
-PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''
-    def resolve_{name}s(self, info):
-        return {klass}.objects.all()
-
-    def resolve_{name}(self, info, id):
-        return {klass}.objects.get(
-            id=id
-        )
-'''
-
 PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
     {name}s = graphene.List(
         {klass}ObjectType
@@ -87,6 +77,16 @@ PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
         id=graphene.String()
     )
 
+'''
+
+
+PRINT_OBJECT_TYPE_QUERY_FUNCTIONS = '''def resolve_{name}s(self, info):
+        return {klass}.objects.all()
+
+    def resolve_{name}(self, info, id):
+        return {klass}.objects.get(
+            id=id
+        )
 '''
 
 
