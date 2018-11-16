@@ -133,7 +133,7 @@ class SchemaApp(object):
                 klass=schema_model.name,
             )
 
-        yield PRINT_QUERY.format(app=self.app.name)
+        yield PRINT_QUERY.format(app=self.app.name.capitalize())
 
         for schema_model in self:
             yield PRINT_OBJECT_TYPE_QUERY_FIELDS.format(
