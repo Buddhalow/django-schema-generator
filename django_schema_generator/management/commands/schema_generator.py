@@ -88,7 +88,7 @@ PRINT_OBJECT_TYPE_QUERY_FIELDS = '''
 
 
 PRINT_QUERY = '''
-class {app}Query(graphene.ObjectType):
+class {app}sQuery(graphene.ObjectType):
 '''
 
 PRINT_ADMIN_PROPERTY = '''
